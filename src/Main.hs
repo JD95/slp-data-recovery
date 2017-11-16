@@ -4,10 +4,13 @@ module Main where
 import Prelude ()
 import Protolude
 
+import Control.Monad
+import Data.List
 import Data.Semigroup ((<>))
 import Options.Applicative
 import Lens.Micro.Platform
 import qualified Data.ByteString as B
+import System.Directory
 
 data Options = Options { message :: Text }
 
@@ -29,11 +32,21 @@ optsInfo = info (opts <**> helper)
   )
 
 specificFile = "data/070717-C10-F-76-PWS/070717-c10-F-76-PWS-7.wav"
+specificFolder = "data/070717-C10-F-76-PWS"
 
+extractData :: ByteString -> ByteString -> ByteString
 extractData date = snd . B.breakSubstring date 
+
+getWavFiles :: FilePath -> IO [[Char]]
+getWavFiles = fmap (filter (isSuffixOf ".wav")) . listDirectory
+
 
 main :: IO ()
 main = do
-  options <- execParser optsInfo
-  putStrLn (message options)
+  files <- getWavFiles specificFolder
+  csv <- forM files $ \file -> do
+    contents <- B.readFile (specificFolder <> "/" <> file) 
+    pure (extractData "070717" contents)
+  B.writeFile "time-data.csv" (B.concat csv)
+
 

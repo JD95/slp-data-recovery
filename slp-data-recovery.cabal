@@ -23,4 +23,5 @@ executable slp-data-recovery
                      , optparse-applicative
                      , microlens-platform
                      , bytestring
+                     , directory
 		     
