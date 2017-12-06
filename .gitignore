@@ -21,3 +21,5 @@ cabal.project.local
 .ghc.environment.*
 *~
 data/*
+/original/083017-B01-M-37-PNS/083017-B01-M-37-PNS-1-0.85.wav
+/recoverd/
